@@ -103,10 +103,6 @@ bash codex_invite.sh invite 42 'a@example.com,b@example.com' --yes
 - 客户端具备浏览器兼容的 TLS/HTTP 行为，但不会重放 TokenRouter 中任意用户自定义的 Go uTLS 模板；也不能保证每个网络出口都不会遇到上游验证。遇到 `cf-mitigated: challenge` 会明确显示 Cloudflare 验证提示。
 - 自动发现以运行中的后端为依据。各发行版的安装分支通过隔离测试验证，实际运行仍受软件源、CPU 架构、网络和账号状态影响。
 
-2026-09-06 在真实 Ubuntu 22.04 / 原生 sub2api 服务器验证：自动读取配置、连接 PostgreSQL 18.4、列出 4 个 OpenAI OAuth 账号、自动安装 yq 和浏览器兼容客户端。4 个账号均成功返回当前邀请资格：3 个 Plus 账号返回 `referrer_plan_type`（套餐不支持推荐邀请），1 个工作区账号可发送无奖励邀请，剩余发送名额 10，要求收件人邮箱域名与企业域名一致。测试没有提交真实邀请。
-
-故障来源已确认：普通 curl 对资格接口遭遇 Cloudflare 验证；改用兼容传输后，上游要求 `program_id` 和 `entrypoint`。TokenRouter 中旧的 `referral_key` 参数以及 `/wham/referrals/eligibility_rules` 路径不适用于当前上游。脚本已移除旧调用流程。
-
 ## 验证与退出码
 
 本地回归使用模拟 Docker/psql/curl，不访问实际 OpenAI 账号，不发送真实邀请：
@@ -125,6 +121,5 @@ bash scripts/tests/codex_invite_dependencies_test.sh
 | `4` | 邀请提交结果不确定，需要先核查上游结果 |
 | `130` | 用户中止 |
 
-数据库及配置依据：TokenRouter `1910b44ac5b766f4ce00e99f7b51d1c484cc3c71`，并兼容真实 sub2api 表结构。
 
 当前邀请协议依据：本机已安装的 Codex Desktop `26.901.5280.0` 客户端中的资格查询、名额计算、邀请提交逻辑，以及上述真实账号 GET 验证。邀请提交的路径和请求体通过模拟回归验证，未发送真实邮件。
