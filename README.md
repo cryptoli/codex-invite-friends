@@ -122,4 +122,3 @@ bash scripts/tests/codex_invite_dependencies_test.sh
 | `130` | 用户中止 |
 
 
-当前邀请协议依据：本机已安装的 Codex Desktop `26.901.5280.0` 客户端中的资格查询、名额计算、邀请提交逻辑，以及上述真实账号 GET 验证。邀请提交的路径和请求体通过模拟回归验证，未发送真实邮件。
